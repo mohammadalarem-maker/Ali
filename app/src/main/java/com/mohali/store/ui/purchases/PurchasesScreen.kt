@@ -45,7 +45,7 @@ fun PurchasesScreen(onBack: () -> Unit, viewModel: PurchasesViewModel = hiltView
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(vertical = 12.dp, bottom = 80.dp)
+            contentPadding = PaddingValues(top = 12.dp, bottom = 80.dp)
         ) {
             if (purchases.isEmpty()) {
                 item {

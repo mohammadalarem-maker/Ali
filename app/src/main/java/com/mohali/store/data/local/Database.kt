@@ -1,5 +1,8 @@
 package com.mohali.store.data.local
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+
 import androidx.room.*
 import com.mohali.store.data.models.*
 import kotlinx.coroutines.flow.Flow

@@ -482,11 +482,11 @@ private fun ParticleBackground() {
     )
 
     Canvas(modifier = Modifier.fillMaxSize()) {
-        particles.forEachIndexed { i, (x, y, size) ->
-            val currentY = (y + offsetY * size * 100) % size.height
+        particles.forEachIndexed { i, (x, y, pSize) ->
+            val currentY = (y + offsetY * pSize * 100) % size.height
             drawCircle(
                 color = Color.White.copy(alpha = 0.05f + (i % 5) * 0.01f),
-                radius = size,
+                radius = pSize,
                 center = Offset(size.width / 2 + x, currentY)
             )
         }
