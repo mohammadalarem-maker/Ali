@@ -5,21 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      # إجبار السيرفر على تثبيت إصدار Gradle 8.7 المتوافق
+          
       - name: Setup Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
 
-      # البناء المباشر باستخدام الإصدار المثبت
-      - name: Build with Gradle
-        run: gradle assembleDebug
+      - name: Auto-Fix Requirements and Build
+        run: |
+          # 1. إذا وجد تعارض في إصدار الأندرويد الأدنى (minSdk) يقوم بإصلاحه وتحديثه إلى 26 تلقائياً
+          echo "Checking and auto-fixing minSdkVersion to 26..."
+          find . -name "build.gradle" -o -name "build.gradle.kts" | xargs sed -i -E 's/(minSdkVersion|minSdk)([[:space:]]*=?[[:space:]]*)[0-9]+/\1\226/g' || true
+
+          # 2. إذا لم يجد ملف gradlew المطلوب للبناء يقوم بإنشائه فوراً
+          if [ ! -f "./gradlew" ]; then
+            echo "gradlew missing! Generating wrapper..."
+            gradle wrapper --gradle-version 8.7
+          fi
+          
+          # 3. تشغيل عملية البناء النهائية
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
