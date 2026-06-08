@@ -15,23 +15,29 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Force Fix minSdkVersion and Build
+      - name: Force Fixes (minSdk and Duplicate Classes)
         run: |
-          # البحث عن ملف build.gradle داخل مجلد app وتغيير أي 24 إلى 26 إجبارياً
           if [ -f "app/build.gradle" ]; then
+            # 1. إصلاح إصدار الأندرويد إلى 26
             sed -i 's/minSdkVersion[[:space:]]*=[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
             sed -i 's/minSdkVersion[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
             sed -i 's/minSdk[[:space:]]*=[[:space:]]*24/minSdk 26/g' app/build.gradle
             sed -i 's/minSdk[[:space:]]*24/minSdk 26/g' app/build.gradle
-            echo "Successfully updated minSdkVersion to 26 in app/build.gradle"
+            
+            # 2. حل مشكلة تكرار المكتبات (طرد النسخة القديمة)
+            echo "" >> app/build.gradle
+            echo "configurations.all {" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'" >> app/build.gradle
+            echo "}" >> app/build.gradle
+            echo "Successfully applied duplicate class fix."
           fi
 
-          # التأكد من وجود gradlew
+          # 3. التأكد من وجود gradlew
           if [ ! -f "./gradlew" ]; then
             gradle wrapper --gradle-version 8.7
           fi
           
-          # البناء
+          # 4. البناء النهائي
           chmod +x gradlew
           ./gradlew assembleDebug
 
