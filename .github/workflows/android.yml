@@ -9,16 +9,29 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          
+      - name: Setup Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-      - name: Build with Gradle
+      - name: Force Fix minSdkVersion and Build
         run: |
-          # فحص وجود ملف gradlew وإنشاؤه إذا لم يوجد
+          # البحث عن ملف build.gradle داخل مجلد app وتغيير أي 24 إلى 26 إجبارياً
+          if [ -f "app/build.gradle" ]; then
+            sed -i 's/minSdkVersion[[:space:]]*=[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
+            sed -i 's/minSdkVersion[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
+            sed -i 's/minSdk[[:space:]]*=[[:space:]]*24/minSdk 26/g' app/build.gradle
+            sed -i 's/minSdk[[:space:]]*24/minSdk 26/g' app/build.gradle
+            echo "Successfully updated minSdkVersion to 26 in app/build.gradle"
+          fi
+
+          # التأكد من وجود gradlew
           if [ ! -f "./gradlew" ]; then
-            echo "gradlew missing! Generating wrapper..."
-            gradle wrapper --gradle-version 8.0
+            gradle wrapper --gradle-version 8.7
           fi
           
-          # إعطاء الصلاحيات والبناء
+          # البناء
           chmod +x gradlew
           ./gradlew assembleDebug
 
