@@ -15,21 +15,29 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Force Fixes (minSdk and Duplicate Classes)
+      - name: Force Fixes (minSdk and ALL BouncyCastle Conflicts)
         run: |
           if [ -f "app/build.gradle" ]; then
-            # 1. إصلاح إصدار الأندرويد إلى 26
+            # 1. إصلاح إصدار الأندرويد الأدنى
             sed -i 's/minSdkVersion[[:space:]]*=[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
             sed -i 's/minSdkVersion[[:space:]]*24/minSdkVersion 26/g' app/build.gradle
             sed -i 's/minSdk[[:space:]]*=[[:space:]]*24/minSdk 26/g' app/build.gradle
             sed -i 's/minSdk[[:space:]]*24/minSdk 26/g' app/build.gradle
             
-            # 2. حل مشكلة تكرار المكتبات (طرد النسخة القديمة)
+            # 2. حل جذري لمشكلة تكرار كلاسات BouncyCastle
+            # سنقوم بإزالة الاستبعاد القديم إن وجد ثم إضافة الاستبعاد الشامل
+            sed -i '/configurations.all {/d' app/build.gradle
+            sed -i "/exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'/d" app/build.gradle
+            sed -i "/exclude group: 'org.bouncycastle', module: 'bcpkix-jdk15on'/d" app/build.gradle
+            sed -i '/}/d' app/build.gradle
+            
             echo "" >> app/build.gradle
             echo "configurations.all {" >> app/build.gradle
             echo "    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcpkix-jdk15on'" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcutil-jdk15on'" >> app/build.gradle
             echo "}" >> app/build.gradle
-            echo "Successfully applied duplicate class fix."
+            echo "Successfully applied comprehensive BouncyCastle fix."
           fi
 
           # 3. التأكد من وجود gradlew
