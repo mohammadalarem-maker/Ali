@@ -9,10 +9,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - run: |
+      - name: Build APK dynamically
+        run: |
+          PROJECT_DIR=$(dirname $(find . -name "gradlew" | head -n 1))
+          echo "Found project directory at: $PROJECT_DIR"
+          cd "$PROJECT_DIR"
           chmod +x gradlew
           ./gradlew assembleDebug
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: '**/*.apk'
