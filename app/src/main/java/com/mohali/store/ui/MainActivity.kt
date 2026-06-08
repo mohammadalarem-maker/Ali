@@ -1,4 +1,5 @@
 package com.mohali.store.ui
+import android.util.Log
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +25,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        try {
+            Log.d("DEBUG_ALI", "MainActivity started - Checking environment...")
+        } catch (e: Exception) {
+            Log.e("DEBUG_ALI", "CRITICAL ERROR: " + e.message)
+        }
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
