@@ -18,10 +18,10 @@ jobs:
       - name: Safe Fixes and Build
         run: |
           if [ -f "app/build.gradle" ]; then
-            # 1. تعديل إصدار الأندرويد الأدنى إلى 26 بشكل آمن
+            # 1. تعديل إصدار الأندرويد الأدنى
             sed -i -E 's/(minSdkVersion|minSdk)([[:space:]]*=?[[:space:]]*)[0-9]+/\1\226/g' app/build.gradle
             
-            # 2. إضافة كود حل تعارض المكتبات بأمان
+            # 2. حل تعارض BouncyCastle
             echo "" >> app/build.gradle
             echo "configurations.all {" >> app/build.gradle
             echo "    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'" >> app/build.gradle
@@ -29,29 +29,28 @@ jobs:
             echo "    exclude group: 'org.bouncycastle', module: 'bcutil-jdk15on'" >> app/build.gradle
             echo "}" >> app/build.gradle
             
-            # 3. حقن مكتبة Material Components لحل مشكلة الثيمات
+            # 3. إضافة Material Components و Gson
             echo "" >> app/build.gradle
             echo "dependencies {" >> app/build.gradle
             echo "    implementation 'com.google.android.material:material:1.12.0'" >> app/build.gradle
+            echo "    implementation 'com.google.code.gson:gson:2.10.1'" >> app/build.gradle
             echo "}" >> app/build.gradle
             
-            # 4. تخطي فحص إصدار الكوتلن والـ Compose لضمان إتمام 컴ไพล์
+            # 4. تخطي فحوصات الكوتلن والواجهات التجريبية
             echo "" >> app/build.gradle
             echo "tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {" >> app/build.gradle
             echo "    kotlinOptions {" >> app/build.gradle
-            echo "        freeCompilerArgs += ['-P', 'plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true']" >> app/build.gradle
+            echo "        freeCompilerArgs += ['-P', 'plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.0']" >> app/build.gradle
+            echo "        freeCompilerArgs += ['-opt-in=androidx.compose.material.ExperimentalMaterialApi']" >> app/build.gradle
+            echo "        freeCompilerArgs += ['-opt-in=androidx.compose.material3.ExperimentalMaterial3Api']" >> app/build.gradle
             echo "    }" >> app/build.gradle
             echo "}" >> app/build.gradle
-            
-            echo "Successfully applied all safe adjustments and compatibility bypasses"
           fi
 
-          # 5. توليد ملف الـ wrapper إذا لم يكن موجوداً
+          # 5. تشغيل البناء النهائي
           if [ ! -f "./gradlew" ]; then
             gradle wrapper --gradle-version 8.7
           fi
-          
-          # 6. تشغيل البناء النهائي
           chmod +x gradlew
           ./gradlew assembleDebug
 
