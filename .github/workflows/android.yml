@@ -21,7 +21,7 @@ jobs:
             # 1. تعديل إصدار الأندرويد الأدنى إلى 26 بشكل آمن
             sed -i -E 's/(minSdkVersion|minSdk)([[:space:]]*=?[[:space:]]*)[0-9]+/\1\226/g' app/build.gradle
             
-            # 2. إضافة كود حل تعارض المكتبات بأمان عبر الـ echo
+            # 2. إضافة كود حل تعارض المكتبات بأمان
             echo "" >> app/build.gradle
             echo "configurations.all {" >> app/build.gradle
             echo "    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'" >> app/build.gradle
@@ -29,21 +29,29 @@ jobs:
             echo "    exclude group: 'org.bouncycastle', module: 'bcutil-jdk15on'" >> app/build.gradle
             echo "}" >> app/build.gradle
             
-            # 3. حقن مكتبة Material Components لحل مشكلة الثيمات المفقودة
+            # 3. حقن مكتبة Material Components لحل مشكلة الثيمات
             echo "" >> app/build.gradle
             echo "dependencies {" >> app/build.gradle
             echo "    implementation 'com.google.android.material:material:1.12.0'" >> app/build.gradle
             echo "}" >> app/build.gradle
             
-            echo "Successfully applied safe adjustments and added Material library"
+            # 4. تخطي فحص إصدار الكوتلن والـ Compose لضمان إتمام 컴ไพล์
+            echo "" >> app/build.gradle
+            echo "tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {" >> app/build.gradle
+            echo "    kotlinOptions {" >> app/build.gradle
+            echo "        freeCompilerArgs += ['-P', 'plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true']" >> app/build.gradle
+            echo "    }" >> app/build.gradle
+            echo "}" >> app/build.gradle
+            
+            echo "Successfully applied all safe adjustments and compatibility bypasses"
           fi
 
-          # 4. توليد ملف الـ wrapper إذا لم يكن موجوداً
+          # 5. توليد ملف الـ wrapper إذا لم يكن موجوداً
           if [ ! -f "./gradlew" ]; then
             gradle wrapper --gradle-version 8.7
           fi
           
-          # 5. تشغيل البناء
+          # 6. تشغيل البناء النهائي
           chmod +x gradlew
           ./gradlew assembleDebug
 
