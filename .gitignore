@@ -1,0 +1,28 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Firebase - DO NOT commit real google-services.json
+# Replace the placeholder with your real file locally
+# app/google-services.json
+
+# Keystore files
+*.jks
+*.keystore
+
+# Generated files
+bin/
+gen/
+out/
+release/
+
+# Gradle cache
+.gradle/
+build/

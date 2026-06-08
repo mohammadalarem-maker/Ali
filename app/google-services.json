@@ -1,0 +1,35 @@
+{
+  "_INSTRUCTIONS": "استبدل هذا الملف بملف google-services.json الحقيقي من Firebase Console",
+  "_STEPS": [
+    "1. اذهب الى https://console.firebase.google.com",
+    "2. أنشئ مشروعاً جديداً باسم MohaliStore",
+    "3. أضف تطبيق Android بـ Package Name: com.mohali.store",
+    "4. حمّل google-services.json وضعه في مجلد app/",
+    "5. فعّل Authentication (Email/Password) في Firebase",
+    "6. فعّل Firestore Database",
+    "7. فعّل Cloud Messaging (FCM)",
+    "8. أضف البريد Mohammedalsarem6@gmail.com كمسؤول"
+  ],
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "mohali-store",
+    "storage_bucket": "mohali-store.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.mohali.store"
+        }
+      },
+      "api_key": [{ "current_key": "YOUR_API_KEY" }],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#E94560"
+        android:pathData="M54,20 C35.2,20 20,35.2 20,54 C20,72.8 35.2,88 54,88 C72.8,88 88,72.8 88,54 C88,35.2 72.8,20 54,20Z" />
+    <!-- Store icon shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,46 L38,72 L70,72 L70,46 L38,46Z
+                          M44,52 L52,52 L52,62 L44,62Z
+                          M56,52 L64,52 L64,72 L56,72Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,44 L74,44 L70,36 L38,36Z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M34,44 L40,36 L38,44Z
+                          M68,36 L74,44 L70,44Z" />
+</vector>
