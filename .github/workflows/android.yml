@@ -21,7 +21,7 @@ jobs:
             # 1. تعديل إصدار الأندرويد الأدنى إلى 26 بشكل آمن
             sed -i -E 's/(minSdkVersion|minSdk)([[:space:]]*=?[[:space:]]*)[0-9]+/\1\226/g' app/build.gradle
             
-            # 2. إضافة كود حل تعارض المكتبات في نهاية الملف تماماً
+            # 2. إضافة كود حل تعارض المكتبات بطرد النسخ القديمة في نهاية الملف
             cat << 'LINES' >> app/build.gradle
 
 configurations.all {
