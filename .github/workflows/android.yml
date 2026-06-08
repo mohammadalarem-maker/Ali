@@ -21,15 +21,13 @@ jobs:
             # 1. تعديل إصدار الأندرويد الأدنى إلى 26 بشكل آمن
             sed -i -E 's/(minSdkVersion|minSdk)([[:space:]]*=?[[:space:]]*)[0-9]+/\1\226/g' app/build.gradle
             
-            # 2. إضافة كود حل تعارض المكتبات بطرد النسخ القديمة في نهاية الملف
-            cat << 'LINES' >> app/build.gradle
-
-configurations.all {
-    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'
-    exclude group: 'org.bouncycastle', module: 'bcpkix-jdk15on'
-    exclude group: 'org.bouncycastle', module: 'bcutil-jdk15on'
-}
-LINES
+            # 2. إضافة كود حل تعارض المكتبات بأمان عبر الـ echo
+            echo "" >> app/build.gradle
+            echo "configurations.all {" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcpkix-jdk15on'" >> app/build.gradle
+            echo "    exclude group: 'org.bouncycastle', module: 'bcutil-jdk15on'" >> app/build.gradle
+            echo "}" >> app/build.gradle
             echo "Successfully applied safe adjustments to app/build.gradle"
           fi
 
